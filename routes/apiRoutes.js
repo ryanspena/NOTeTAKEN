@@ -1,30 +1,10 @@
-const fs = require('fs');
-const notesData = require('../data/db.json');
-const { response } = require('express');
+const note = require('../data/note')
+const router = require('express').Route()
 
-module.exports = (app) => {
-    
- app.get('/api/notes', (req, res) => {
-      
-  let data = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
-  console.log(JSON.stringify(data));
-      
-  res.json(data)
-  
- });
+router.get("/notes", (req, res) => {
+ note.getNotes().then(notes => {
+  return res.json(notes)
+ })
+ .catch(err => {res.status(400).json(err)})
+})
 
- app.post('/api/notes', (req, res) => {
-  const newNote = req.body;
-
-  console.log(JSON.stringify(newNote));
-
-  newNote.id = uuidv4();
-
-  let data = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
-  data.push(newNote);
-
-  fs.writeFileSync('./data/db.json', JSON.stringify(data));
-
-  res.json(data);
- });
-}
