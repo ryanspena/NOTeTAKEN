@@ -19,7 +19,7 @@ app.get('/notes', (req, res) => {
  res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
-app.get('/routes/api/apiRoutes.js', (req, res) => {
+app.get('/routes/apiRoutes.js', (req, res) => {
  return res.json(noteData);
 });
 
