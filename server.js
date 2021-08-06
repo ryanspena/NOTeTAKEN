@@ -1,21 +1,37 @@
+const express = require('express');
+const fs = require('fs');
+const { request } = require('http');
+const path = require('path');
+
+const app = express();
 const PORT = process.env.PORT || 3002;
 
-const express = require('express');
-const app = express();
-const path = require('path');
-const fs = require('fs');
-const notes = require("./data/db.json")
-const htmlRoutes = require('./routes/htmlRoutes')
-const apiRoutes = require('./routes/apiRoutes')
+const noteData = require("./data/db.json");
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(__dirname + '/public'));
 
-
-app.get('./public/assets/js/index.js', (req, res) => {
-    res.json(db.json);
+app.get("/", (req, res) => {
+ res.sendFiles(path.join(__dirname, "./public/index.html"))
 });
-app.use(express.static('public'));
-app.use('/routes/apiRoutes.js')
-app.use('/routes/htmlRoutes.js')
-app.listen(3002, () => {
-    console.log('lets see what happens?')
-    return;
-}) 
+
+app.get('/notes', (req, res) => {
+ res.sendFile(path.join(__dirname, "./public/notes.html"));
+});
+
+app.get('/routes/api/apiRoutes.js', (req, res) => {
+ return res.json(noteData);
+});
+
+app.post("/public/notes.html", (req, res) => {
+ const newNote = req.body;
+ const savedNotes = noteData;
+
+ savedNotes.push(newNote);
+ fs.writeFileSync("./data/db.json", JSON.stringify(savedNotes));
+ return res.json(savedNotes);
+});
+
+app.listen(PORT, () => {
+ console.log(`is she ${PORT} working?!`);
+});
