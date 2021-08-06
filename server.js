@@ -33,5 +33,5 @@ app.post("/public/notes.html", (req, res) => {
 });
 
 app.listen(PORT, () => {
- console.log(`is she ${PORT} working?!`);
+ console.log(`is ${PORT} working?!`);
 });
